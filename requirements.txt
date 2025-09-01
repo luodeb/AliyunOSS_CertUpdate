@@ -1,0 +1,4 @@
+oss2>=2.19.1
+requests>=2.32.3
+aliyun-python-sdk-alidns>=3.0.7
+aliyun-python-sdk-core>=2.16.0
