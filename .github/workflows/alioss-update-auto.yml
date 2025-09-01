@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Init action
+      - name: Init Action
         run: |
           export ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }}
           export ACCESS_KEY_SECRET=${{ secrets.ACCESS_KEY_SECRET }}
@@ -27,8 +27,8 @@ jobs:
 
       - name: Aliyun Cli Tools
         run: |
-          curl -o aliyun-cli.tgz https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-$(uname -m).tgz
-          tar -zxvf aliyun-cli.tgz
+          curl -o aliyun-cli.tgz https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-amd64.tgz
+          tar xzvf aliyun-cli.tgz
           sudo mv aliyun /usr/local/bin/
           aliyun configure set --profile akProfile --mode AK
           aliyun configure set --access-key-id $ACCESS_KEY_ID
