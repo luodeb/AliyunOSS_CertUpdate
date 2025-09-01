@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: init action
+      - name: Init action
         run: |
           export ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }}
           export ACCESS_KEY_SECRET=${{ secrets.ACCESS_KEY_SECRET }}
@@ -23,7 +23,7 @@ jobs:
           export REGION=${{ secrets.REGION }}
           export DOMAIN=${{ secrets.DOMAIN }}
           export EMAIL=${{ secrets.EMAIL }}
-          apt install -y certbot && pip install -r requirements.txt
+          sudo apt install -y certbot && pip install -r requirements.txt
 
       - name: Aliyun Cli Tools
         run: |
