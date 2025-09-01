@@ -37,7 +37,7 @@ jobs:
 
       - name: Apply for a new certificate
         run: |
-          mkdir -p /etc/letsencrypt/certs
+          sudo mkdir -p /etc/letsencrypt/certs
           sudo certbot certonly -d "${{ secrets.DOMAIN }}" --manual --preferred-challenges dns \
                 --manual-auth-hook "/usr/local/bin/alidns" \
                 --manual-cleanup-hook "/usr/local/bin/alidns clean" \
