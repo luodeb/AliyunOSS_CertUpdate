@@ -43,8 +43,8 @@ jobs:
       - name: Run OSS Cert Update
         run: |
           CERT_PATH="/etc/letsencrypt/live/${{ secrets.DOMAIN }}"
-          export CERTIFICATE="$(cat $CERT_PATH/fullchain.pem)"
-          export PRIVATE_KEY="$(cat $CERT_PATH/privkey.pem)"
+          export CERTIFICATE="$(sudo cat $CERT_PATH/fullchain.pem)"
+          export PRIVATE_KEY="$(sudo cat $CERT_PATH/privkey.pem)"
           python oss_update.py \
             --access-key-id "${{ secrets.ACCESS_KEY_ID }}" \
             --access-key-secret "${{ secrets.ACCESS_KEY_SECRET }}" \

@@ -28,7 +28,7 @@ class OSS:
                 return c
         return None
 
-    def _get_cname_info(self, isprint: bool = False) -> list:
+    def _get_cname_info(self, isprint: bool = True) -> list:
         list_result = self.bucket.list_bucket_cname()
         if isprint:
             for c in list_result.cname:
