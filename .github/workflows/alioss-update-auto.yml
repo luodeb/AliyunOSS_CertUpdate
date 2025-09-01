@@ -16,7 +16,8 @@ jobs:
 
       - name: Init Action
         run: |
-          sudo apt install -y certbot && pip install -r requirements.txt
+          sudo apt install -y certbot
+          pip install -r requirements.txt
 
       - name: Aliyun Cli Tools
         run: |
@@ -36,7 +37,8 @@ jobs:
 
       - name: Apply for a new certificate
         run: |
-          certbot certonly -d "${{ secrets.DOMAIN }}" --manual --preferred-challenges dns \
+          mkdir -p /etc/letsencrypt/certs
+          sudo certbot certonly -d "${{ secrets.DOMAIN }}" --manual --preferred-challenges dns \
                 --manual-auth-hook "/usr/local/bin/alidns" \
                 --manual-cleanup-hook "/usr/local/bin/alidns clean" \
                 --agree-tos --email ${{ secrets.EMAIL }} --non-interactive
