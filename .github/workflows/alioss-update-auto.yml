@@ -1,0 +1,48 @@
+name: alioss-update-auto
+env:
+  TZ: Asia/Shanghai
+
+on:
+  schedule:
+    - cron: "0 20 * * sun" # 时区对cron无效，所以要提前8个小时，
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: init action
+        run: |
+          export ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }}
+          export ACCESS_KEY_SECRET=${{ secrets.ACCESS_KEY_SECRET }}
+          export ENDPOINT=${{ secrets.ENDPOINT }}
+          export BUCKET_NAME=${{ secrets.BUCKET_NAME }}
+          export REGION=${{ secrets.REGION }}
+          export DOMAIN=${{ secrets.DOMAIN }}
+          export EMAIL=${{ secrets.EMAIL }}
+          apt install -y certbot && pip install -r requirements.txt
+
+      - name: Aliyun Cli Tools
+        run: |
+          curl -o aliyun-cli.tgz https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-$(uname -m).tgz
+          tar -zxvf aliyun-cli.tgz
+          sudo mv aliyun /usr/local/bin/
+          aliyun configure set --profile akProfile --mode AK
+          aliyun configure set --access-key-id $ACCESS_KEY_ID
+          aliyun configure set --access-key-secret $ACCESS_KEY_SECRET
+          aliyun configure set --region $REGION
+      - name: Aliyun DNS Tools
+        run: |
+          wget https://cdn.jsdelivr.net/gh/justjavac/certbot-dns-aliyun@main/alidns.sh
+          sudo mv alidns.sh /usr/local/bin/alidns
+          sudo chmod +x /usr/local/bin/alidns
+
+      - name: Apply for a new certificate
+        run: |
+          certbot certonly -d "$DOMAIN" --manual --preferred-challenges dns \
+                --manual-auth-hook "/usr/local/bin/alidns" \
+                --manual-cleanup-hook "/usr/local/bin/alidns clean" \
+                --agree-tos --email $EMAIL --non-interactive
