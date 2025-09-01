@@ -16,13 +16,6 @@ jobs:
 
       - name: Init Action
         run: |
-          export ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }}
-          export ACCESS_KEY_SECRET=${{ secrets.ACCESS_KEY_SECRET }}
-          export ENDPOINT=${{ secrets.ENDPOINT }}
-          export BUCKET_NAME=${{ secrets.BUCKET_NAME }}
-          export REGION=${{ secrets.REGION }}
-          export DOMAIN=${{ secrets.DOMAIN }}
-          export EMAIL=${{ secrets.EMAIL }}
           sudo apt install -y certbot && pip install -r requirements.txt
 
       - name: Aliyun Cli Tools
@@ -30,10 +23,11 @@ jobs:
           curl -o aliyun-cli.tgz https://aliyuncli.alicdn.com/aliyun-cli-linux-latest-amd64.tgz
           tar xzvf aliyun-cli.tgz
           sudo mv aliyun /usr/local/bin/
-          aliyun configure set --profile akProfile --mode AK
-          aliyun configure set --access-key-id $ACCESS_KEY_ID
-          aliyun configure set --access-key-secret $ACCESS_KEY_SECRET
-          aliyun configure set --region $REGION
+          aliyun configure set --profile akProfile --mode AK \
+            --access-key-id ${{ secrets.ACCESS_KEY_ID }} \
+            --access-key-secret ${{ secrets.ACCESS_KEY_SECRET }} \
+            --region ${{ secrets.REGION }}
+
       - name: Aliyun DNS Tools
         run: |
           wget https://cdn.jsdelivr.net/gh/justjavac/certbot-dns-aliyun@main/alidns.sh
@@ -42,7 +36,7 @@ jobs:
 
       - name: Apply for a new certificate
         run: |
-          certbot certonly -d "$DOMAIN" --manual --preferred-challenges dns \
+          certbot certonly -d "${{ secrets.DOMAIN }}" --manual --preferred-challenges dns \
                 --manual-auth-hook "/usr/local/bin/alidns" \
                 --manual-cleanup-hook "/usr/local/bin/alidns clean" \
-                --agree-tos --email $EMAIL --non-interactive
+                --agree-tos --email ${{ secrets.EMAIL }} --non-interactive
